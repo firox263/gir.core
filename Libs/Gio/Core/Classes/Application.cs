@@ -26,7 +26,7 @@ namespace Gio
         public void Run()
         {
             var zero = IntPtr.Zero;
-            Sys.Application.run(this, 0, ref zero);
+            Sys.Application.run(Handle, 0, ref zero);
         }
 
         protected virtual void OnStartup() => Startup?.Invoke(this, EventArgs.Empty);

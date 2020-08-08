@@ -12,7 +12,7 @@ namespace WebKit2
         public Property<WebContext?> Context { get; }
         #endregion Properties
 
-        public WebView(WebContext context) : this(Sys.WebView.new_with_context(context)) {}
+        public WebView(WebContext context) : this(Sys.WebView.new_with_context(context.Handle)) {}
         public WebView() : this(Sys.WebView.@new()) { }
 
         internal WebView(IntPtr handle) : base(handle) 
@@ -23,10 +23,10 @@ namespace WebKit2
             );
         }
 
-        public void LoadUri(string uri) => Sys.WebView.load_uri(this, uri);
-        public Settings GetSettings() => Convert(Sys.WebView.get_settings(this), (ptr) => new Settings(ptr, true));
-        public UserContentManager GetUserContentManager() => Convert(Sys.WebView.get_user_content_manager(this), (ptr) => new UserContentManager(ptr, true));
-        public WebInspector GetInspector() => Convert(Sys.WebView.get_inspector(this), (ptr) => new WebInspector(ptr, true));
+        public void LoadUri(string uri) => Sys.WebView.load_uri(Handle, uri);
+        public Settings GetSettings() => Convert(Sys.WebView.get_settings(Handle), (ptr) => new Settings(ptr));
+        public UserContentManager GetUserContentManager() => Convert(Sys.WebView.get_user_content_manager(Handle), (ptr) => new UserContentManager(ptr));
+        public WebInspector GetInspector() => Convert(Sys.WebView.get_inspector(Handle), (ptr) => new WebInspector(ptr));
 
         public Task<Value> RunJavascriptAsync(string script)
         {
@@ -43,7 +43,7 @@ namespace WebKit2
                 tcs.SetResult(value);
             }
 
-            Sys.WebView.run_javascript(this, script, IntPtr.Zero, Callback, IntPtr.Zero);
+            Sys.WebView.run_javascript(Handle, script, IntPtr.Zero, Callback, IntPtr.Zero);
 
             return tcs.Task;
         }

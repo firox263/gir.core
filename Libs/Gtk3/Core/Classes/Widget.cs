@@ -4,7 +4,7 @@ using GObject;
 
 namespace Gtk
 {
-    public partial class Widget : GObject.Object, IWidget
+    public partial class Widget : GObject.InitiallyUnowned, IWidget
     {
         private Builder? builder;
 
@@ -19,13 +19,13 @@ namespace Gtk
             builder.Connect(this);
         }
 
-        internal Widget(IntPtr handle) : base(handle, true) 
+        internal Widget(IntPtr handle) : base(handle) 
         {
             WidthRequest = PropertyOfInt("width-request");
             HeightRequest = PropertyOfInt("height-request");
         }
 
-        public void Show() => Sys.Widget.show(this);
-        public void ShowAll() => Sys.Widget.show_all(this);
+        public void Show() => Sys.Widget.show(Handle);
+        public void ShowAll() => Sys.Widget.show_all(Handle);
     }
 }

@@ -8,6 +8,6 @@ namespace Gtk
         internal Box(IntPtr handle) : base(handle) {}
         public Box(string template, string obj = "root") : base(template, obj, Assembly.GetCallingAssembly()) { }
 
-        public void PackStart(Widget widget, bool expand, bool fill, uint padding) => Sys.Box.pack_start(this, widget, expand, fill, padding);
+        public void PackStart(Widget widget, bool expand, bool fill, uint padding) => Sys.Box.pack_start(Handle, widget.Handle, expand, fill, padding);
     }
 }

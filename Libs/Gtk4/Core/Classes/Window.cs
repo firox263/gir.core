@@ -34,8 +34,8 @@ namespace Gtk
             );
         }
 
-        public void SetDefaultSize(int width, int height) => Sys.Window.set_default_size(this, width, height);
-        public void SetTitlebar(Widget widget) => Sys.Window.set_titlebar(this, widget);
-        public void SetChild(Widget child) => Sys.Window.set_child(this, child);
+        public void SetDefaultSize(int width, int height) => Sys.Window.set_default_size(Handle, width, height);
+        public void SetTitlebar(Widget widget) => Sys.Window.set_titlebar(Handle, widget.Handle);
+        public void SetChild(Widget child) => Sys.Window.set_child(Handle, child.Handle);
     }
 }

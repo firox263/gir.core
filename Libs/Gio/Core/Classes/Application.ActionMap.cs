@@ -17,7 +17,7 @@ namespace Gio
             action.Dispose();
             actions.Remove(name);
 
-            Sys.ActionMap.remove_action(this, name);
+            Sys.ActionMap.remove_action(Handle, name);
         }
 
         public void AddAction(string name, ICommand command)
@@ -26,7 +26,7 @@ namespace Gio
                 throw new Exception($"Action {name} is already used");
 
            var action = new CommandAction(name, command);
-           Sys.ActionMap.add_action(this, action);
+           Sys.ActionMap.add_action(Handle, action.Handle);
            actions[name] = action;
         }
     }

@@ -27,7 +27,7 @@ namespace GObject
                     objects.Remove(Handle);
                 }
 
-                _handle = IntPtr.Zero;
+                handle = IntPtr.Zero;
 
                 //TODO: Findout about closure release
                 /*foreach(var closure in closures)

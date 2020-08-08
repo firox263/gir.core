@@ -1,6 +1,4 @@
 using System;
-using GObject;
-using GObject.Sys;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
@@ -21,7 +19,7 @@ namespace GObject.Test
         public static void TestSimple()
         {
             var obj = new GObject.Object();
-            var stringPtr = Sys.Methods.type_name(TypeDictionary.FromType(obj.GetType()));
+            var stringPtr = Sys.Methods.type_name(TypeDictionary.gtypeof(obj.GetType()));
             string? name = Marshal.PtrToStringAnsi(stringPtr);
             Debug.Assert("GObject" == name);
 
@@ -32,7 +30,7 @@ namespace GObject.Test
         {
             var obj = new Final();
 
-            string name = obj.ToString();
+            string? name = obj.ToString();
             Console.WriteLine("Using custom GObject-integrated type: " + name);
             
             Debug.Assert("GObjectTestFinal" == name);

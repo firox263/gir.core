@@ -41,9 +41,9 @@ namespace Handy
             RegisterEvent("page-changed", OnPageChanged);
         }
 
-        public void Prepend(Widget widget) => Sys.Paginator.prepend(this, widget);
-        public void Append(Widget widget) => Sys.Paginator.insert(this, widget, -1);
-        public void ScrollTo(Widget widget) => Sys.Paginator.scroll_to(this, widget);
+        public void Prepend(Widget widget) => Sys.Paginator.prepend(Handle, widget.Handle);
+        public void Append(Widget widget) => Sys.Paginator.insert(Handle, widget.Handle, -1);
+        public void ScrollTo(Widget widget) => Sys.Paginator.scroll_to(Handle, widget.Handle);
 
         protected void OnPageChanged(ref GObject.Sys.Value[] values)
         { 

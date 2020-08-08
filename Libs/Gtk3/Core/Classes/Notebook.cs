@@ -35,7 +35,7 @@ namespace Gtk
             var tabLabel = new Label(label);
             data.Add(child, tabLabel);
 
-            Sys.Notebook.insert_page(this, child, tabLabel, position);
+            Sys.Notebook.insert_page(Handle, child.Handle, tabLabel.Handle, position);
         }
 
         public void RemovePage(Widget child)
@@ -48,15 +48,17 @@ namespace Gtk
             RemovePage(index);
         }
 
-        protected void RemovePage(int page) => Sys.Notebook.remove_page(this, page);
+        protected void RemovePage(int page) => Sys.Notebook.remove_page(Handle, page);
 
-        public int GetPageNum(Widget child) => Sys.Notebook.page_num(this, child);
+        public int GetPageNum(Widget child) => Sys.Notebook.page_num(Handle, child.Handle);
 
-        public int GetPageCount() => Sys.Notebook.get_n_pages(this);
+        public int GetPageCount() => Sys.Notebook.get_n_pages(Handle);
 
         private static void GetChildAndPage(ref GObject.Sys.Value[] values, out Widget child, out uint pageNum)
         {
-            child = ((Widget?)(GObject.Object?)(IntPtr)values[1])!;
+            if(!TryGetObject((IntPtr) values[1], out child))
+                throw new Exception("Not a child widget!");
+            
             pageNum = (uint)values[2];
         }
 

@@ -12,8 +12,8 @@ namespace WebKit2
             RegisterEvent("initialize-web-extensions", OnInitializeWebExtensions);
         }
 
-        public void ClearCache() => Sys.WebContext.clear_cache(this);
-        public void SetWebExtensionsDirectory(string directory) => Sys.WebContext.set_web_extensions_directory(this, directory);
+        public void ClearCache() => Sys.WebContext.clear_cache(Handle);
+        public void SetWebExtensionsDirectory(string directory) => Sys.WebContext.set_web_extensions_directory(Handle, directory);
 
         protected void OnInitializeWebExtensions() => InitializeWebExtensions?.Invoke(this, EventArgs.Empty);
     }

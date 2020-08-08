@@ -27,7 +27,7 @@ namespace Gio.DBus
         {
             var @params = parameters?.Handle ?? IntPtr.Zero;
 
-            var ret = Sys.DBusConnection.call_sync(this, busName, objectPath, interfaceName, methodName, @params, IntPtr.Zero, Sys.DBusCallFlags.none, 9999, IntPtr.Zero, out var error);
+            var ret = Sys.DBusConnection.call_sync(Handle, busName, objectPath, interfaceName, methodName, @params, IntPtr.Zero, Sys.DBusCallFlags.none, 9999, IntPtr.Zero, out var error);
 
             HandleError(error);
 
@@ -48,7 +48,7 @@ namespace Gio.DBus
             }
 
             var @params = parameters?.Handle ?? IntPtr.Zero;
-            Sys.DBusConnection.call(this, busName, objectPath, interfaceName, methodName, @params, IntPtr.Zero, Sys.DBusCallFlags.none, -1, IntPtr.Zero, Callback, IntPtr.Zero);
+            Sys.DBusConnection.call(Handle, busName, objectPath, interfaceName, methodName, @params, IntPtr.Zero, Sys.DBusCallFlags.none, -1, IntPtr.Zero, Callback, IntPtr.Zero);
 
             return tcs.Task;
         }

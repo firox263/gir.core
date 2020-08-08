@@ -16,7 +16,7 @@ namespace GObject
             value.Dispose();
         }
 
-        protected void Set(Object value, [CallerMemberName] string? propertyName = null) => SetProperty(value.Handle, propertyName);
+        protected void Set(Object? value, [CallerMemberName] string? propertyName = null) => SetProperty(value!.Handle, propertyName);
         protected void SetEnum<T>(T e, [CallerMemberName] string? propertyName = null) where T : Enum => SetProperty((long)(object)e, propertyName);
         protected void Set(bool value, [CallerMemberName] string? propertyName = null) => SetProperty(value, propertyName);
         protected void Set(uint value, [CallerMemberName] string? propertyName = null) => SetProperty(value, propertyName);
@@ -77,15 +77,14 @@ namespace GObject
             return (IntPtr) v;
         }
 
-        /*///<summary>
+        ///<summary>
         ///May return null!
         ///</sumamry>
         protected T GetObject<T>([CallerMemberName] string? propertyName = null) where T : Object?
         {
             using var v = GetProperty(propertyName);
-            #pragma warning disable CS8601, CS8603
-            return (T)(IntPtr) v;
-            #pragma warning restore CS8601, CS8603
-        }*/
+            objects.TryGetValue((IntPtr) v, out var obj);
+            return (T)obj;
+        }
     }
 }

@@ -19,7 +19,13 @@ namespace WebKit2WebExtension
             RegisterEvent("page-created", OnPageCreated);
         }
 
-        private WebPage GetPage(ref GObject.Sys.Value[] values) => ((WebPage?)(GObject.Object?)(IntPtr)values[1])!;
+        private WebPage GetPage(ref GObject.Sys.Value[] values)
+        {
+            if(!TryGetObject((IntPtr)values[1], out WebPage webPage))
+                throw new Exception("Not a web page!");
+
+            return webPage;
+        }
         protected void OnPageCreated(ref GObject.Sys.Value[] values) => PageCreated?.Invoke(this, new PageCreatedEventArgs(GetPage(ref values)));
     }
 }

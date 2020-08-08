@@ -1,17 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace GObject
 {
-    // Stub Class
-    // Floating references handled by the base GObject class
-    [Wrapper("GInitiallyUnowned")]
-    public class InitiallyUnowned : Object
-    {
-        protected InitiallyUnowned() {}
-    }
-
     // GObject Wrapper
     [Wrapper("GObject")]
     public partial class Object : IObject
@@ -20,8 +11,8 @@ namespace GObject
         private static readonly Dictionary<IntPtr, Object> objects = new Dictionary<IntPtr, Object>();
 
         // Pointer to underlying GObject
-        private IntPtr _handle;
-        public IntPtr Handle => _handle;
+        private IntPtr handle;
+        public IntPtr Handle => handle;
 
         // Member Fields
         private HashSet<Closure> closures;        
@@ -46,26 +37,29 @@ namespace GObject
             Initialize(out closures, handle);
         }
 
-        protected Object(IntPtr handle, bool isInitiallyUnowned = false)
-            => Initialize(out closures, handle, isInitiallyUnowned);
+        protected Object(IntPtr handle)
+            => Initialize(out closures, handle);
 
-
-        private void Initialize(out HashSet<Closure> closures, IntPtr handle, bool isInitiallyUnowned = false)
+        private void Initialize(out HashSet<Closure> closures, IntPtr handle)
         {
-            var type = this.GetType();
+            var type = GetType();
             if (!TypeDictionary.Contains(type))
                 RegisterType(type);
 
             objects.Add(handle, this);
             
-            if(isInitiallyUnowned)
-                this._handle = Sys.Object.ref_sink(handle);
-            else
-                this._handle = handle;
+            this.handle = handle;
 
             closures = new HashSet<Closure>();
             RegisterOnFinalized();
+            
+            Initialize();
         }
+
+        /// <summary>
+        /// Override this to add custom initialization code
+        /// </summary>
+        protected virtual void Initialize(){ }
 
         // Registers the object in the Type Dictionary
         internal static void RegisterType(Type type)
@@ -107,7 +101,7 @@ namespace GObject
 
         private void RegisterEvent(string eventName, Closure closure)
         {
-            var ret = Sys.Methods.signal_connect_closure(_handle, eventName, closure, false);
+            var ret = Sys.Methods.signal_connect_closure(handle, eventName, closure, false);
 
             if(ret == 0)
                 throw new Exception($"Could not connect to event {eventName}");

@@ -6,6 +6,6 @@ namespace Gtk
     {
         internal Image(IntPtr handle) : base(handle) { }
 
-        public void Clear() => Sys.Image.clear(this);
+        public void Clear() => Sys.Image.clear(Handle);
     }
 }
