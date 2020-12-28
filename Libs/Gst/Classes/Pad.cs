@@ -11,10 +11,10 @@ namespace Gst
         #endregion
 
         public static PadLinkReturn Link(Pad sourcePad, Pad sinkPad)
-            => Native.link(GetHandle(sourcePad), GetHandle(sinkPad));
+            => Native.link(sourcePad.Handle, sinkPad.Handle);
         
         public static bool Unlink(Pad sourcePad, Pad sinkPad)
-            => Native.unlink(GetHandle(sourcePad), GetHandle(sinkPad));
+            => Native.unlink(sourcePad.Handle, sinkPad.Handle);
         
         public PadLinkReturn Link(Pad sinkPad) => Link(this, sinkPad);
         public bool Unlink(Pad sinkPad) => Unlink(this, sinkPad);
@@ -26,10 +26,10 @@ namespace Gst
 
         public Caps? QueryCaps() => QueryCaps(null);
 
-        public Pad? GetPeer() => TryWrapPointerAs<Pad>(Native.get_peer(Handle), out Pad pad) ? pad : null;
+        public Pad? GetPeer() => TryWrapHandle<Pad>(Native.get_peer(Handle), out Pad? pad) ? pad : null;
 
         public Element? GetParentElement() =>
-            TryWrapPointerAs<Element>(Native.get_parent_element(Handle), out Element element) ? element : null;
+            TryWrapHandle<Element>(Native.get_parent_element(Handle), out Element? element) ? element : null;
 
         public ulong AddProbe(PadProbeType mask, PadProbeCallback callback, DestroyNotify? notify = null)
         {

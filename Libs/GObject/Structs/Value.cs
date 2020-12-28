@@ -50,7 +50,7 @@ namespace GObject
             string v7 => new Value(v7),
             IntPtr v8 => new Value(v8),
             Enum _ => new Value((long) value),
-            Object obj => new Value(Object.GetHandle(obj)),
+            Object obj => new Value(obj.Handle),
             _ => throw new NotSupportedException("Unable to create the value from the given type.")
         };
 
@@ -100,7 +100,7 @@ namespace GObject
         public IntPtr GetBoxed() => Native.get_boxed(ref this);
 
         public Object? GetObject()
-            => Object.TryWrapPointerAs(Native.get_object(ref this), out Object obj) ? obj : null;
+            => Object.TryWrapHandle(Native.get_object(ref this), out Object? obj) ? obj : null;
 
         public bool GetBool() => Native.get_boolean(ref this);
         public uint GetUint() => Native.get_uint(ref this);

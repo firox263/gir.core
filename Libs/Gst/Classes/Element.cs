@@ -31,8 +31,8 @@ namespace Gst
         //     {
         //         Fields fields = GetObjectStruct<Fields>();
         //         IntPtr bus = fields.bus;
-        //         return WrapPointerAs<Bus>(bus);
-        //         // WrapPointerAs<Bus>(GetObjectStruct<Fields>().bus);   
+        //         return WrapHandle<Bus>(bus);
+        //         // WrapHandle<Bus>(GetObjectStruct<Fields>().bus);   
         //     }
         //     set
         //     {
@@ -51,7 +51,7 @@ namespace Gst
             if (errPtr != IntPtr.Zero)
                 Error.HandleError(errPtr);
 
-            return TryWrapPointerAs(result, out Element element) ? element : null;
+            return TryWrapHandle(result, out Element? element) ? element : null;
         }
         
         public Bus GetBus()
@@ -67,7 +67,7 @@ namespace Gst
             return new Bus(ret);
         }
 
-        public bool AddPad(Pad pad) => Native.add_pad(Handle, GetHandle(pad));
+        public bool AddPad(Pad pad) => Native.add_pad(Handle, pad.Handle);
 
         public StateChangeReturn SetState(State state) 
             => Native.set_state(Handle, state);
@@ -101,17 +101,17 @@ namespace Gst
         }
 
         public Pad GetStaticPad(string name)
-            => WrapPointerAs<Pad>(Native.get_static_pad(Handle, name));
+            => WrapHandle<Pad>(Native.get_static_pad(Handle, name));
         
         public static void Unlink(Element src, Element dest)
-            => Native.unlink(GetHandle(src), GetHandle(dest));
+            => Native.unlink(src.Handle, dest.Handle);
         
         public void Unlink(Element dest) => Unlink(this, dest);
 
         public bool Link(Element dest) => Link(this, dest);
 
         public static bool Link(Element src, Element dest)
-            => Native.link(GetHandle(src), GetHandle(dest));
+            => Native.link(src.Handle, dest.Handle);
 
         // FIXME: This function is the culprit for wavparse0 errors
         // TODO: Make this work properly, and additionally clean up
@@ -136,32 +136,28 @@ namespace Gst
         }
 
         public Pad? GetRequestPad(string name)
-            => TryWrapPointerAs(Native.get_request_pad(Handle, name), out Pad pad) ? pad : null;
+            => TryWrapHandle(Native.get_request_pad(Handle, name), out Pad? pad) ? pad : null;
 
         public bool SyncStateWithParent()
             => Native.sync_state_with_parent(Handle);
         
-        // Banshee appears to use a string indexer to
-        // lookup properties from GLib for GStreamer
-        // objects, as we do not know plugin information
-        // at compile time.
+        // Some older mono applications appear to use a
+        // string indexer to lookup properties from GLib
+        // for GStreamer objects, as we do not know plugin
+        // objects at compile time.
         //
-        // FIXME: This is a very rudimentary implementation of
-        // a property (?) indexer in order to help port over
-        // mono/gtk2 applications. Do we want to keep this
-        // in the long term?
-        //
-        // This is written purely from guesswork as to what
-        // the original code does. It might not actually work. Try
-        // and fix this ASAP.
-        [Obsolete]
+        // This is a rudimentary implementation of
+        // a property indexer in order to help port over
+        // mono/gtk2 applications. We likely want to move this
+        // into GObject in the long term (e.g. via custom Property
+        // Descriptors).
         public object? this[string property]
         {
             get
             {
                 try
                 {
-                    return GStreamerGlueGetProperty(property).Extract();
+                    return GetProperty(property).Extract();
                 }
                 catch (Exception e)
                 {
@@ -175,13 +171,15 @@ namespace Gst
                 {
                     // We intentionally throw an exception if the type of value cannot be wrapped
                     // TODO: Support boxing arbitrary managed types
+                    // TODO: Move this checking code into GObject proper for
+                    // safer and more reliable access to properties.
                     Value val;
                     if (value?.GetType().IsAssignableTo(typeof(GObject.Object)) ?? false)
                         val = Value.From((Object) value!);
                     else
                         val = Value.From(value);
                     
-                    GStreamerGlueSetProperty(property, val);
+                    SetProperty(property, val);
                 }
                 catch (Exception e)
                 {

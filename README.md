@@ -1,5 +1,7 @@
 # Welcome to Gir.Core
 
+[![Continuous integration status](https://github.com/GirCore/gir.core/workflows/Continuous%20integration/badge.svg?branch=develop)](https://github.com/gircore/gir.core/actions)
+
 Gir.Core is a project which aims to provide C# wrapper for different [GObject] based libraries like [GTK] for user interfaces.
 
 <!-- If you want to get started with the library head over to http://gircore.tiede.org. If you want to get into more technical details just continue reading. -->
@@ -13,13 +15,13 @@ This project aims to provide:
 * An easy way to allow 3rd party developers to integrate into this stack to achieve interoperability between different [GObject] based libraries.
 
 Currently supported libraries
-* [GTK] (wip): UI-Toolkit (GTK3 + experimental GTK4)
-* [WebKitGTK] (planed): Browser-Engine
-* [JavaScriptCore] (planed): Javascript integration for [WebKitGTK]
-* [libhandy] (planed): Convergent UI-Widgets for [GTK] to support mobile phones
-* [dbus] (wip): Library for inter-process communication via [GIO]
-* [libchamplain] (planed): Library to display maps
-* [gstreamer] (wip): Multimedia Framework
+* [GTK] (partial support): UI-Toolkit (GTK3 + experimental GTK4)
+* [GStreamer] (partial support): Multimedia Framework
+* [DBus] (wip): Library for inter-process communication via [GIO]
+* [WebKitGTK] (planned): Browser-Engine
+* [JavaScriptCore] (planned): Javascript integration for [WebKitGTK]
+* [libhandy] (planned): Convergent UI-Widgets for [GTK] to support mobile phones
+* [libchamplain] (planned): Library to display maps
 
 ## Status
 As we are currently figuring out the best way for this project the code is under heavy development and not ready for production. There is currently _no_ nuget package available.
@@ -70,7 +72,7 @@ To use the newly build libraries in your project just add a reference to the csp
     $ dotnet add reference [RepoPath]/Libs/Gtk/Gtk.csproj
 
 ## How to help
-Anyone who wants to help is very welcome. Just create a pull request for new code or create an issue to get in contact.
+Anyone who wants to help is very welcome. If you want to get into the project take a look at our [Good First Issues](https://github.com/gircore/gir.core/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or get in contact by starting a [Discussion](https://github.com/gircore/gir.core/discussions).
 
 ## Code structure
 The folder structure in this repository is organized like:

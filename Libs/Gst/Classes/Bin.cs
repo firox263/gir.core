@@ -9,19 +9,12 @@ namespace Gst
     {
         public Bin(string name) : this(ConstructParameter.With(NameProperty, name)) { }
 
-        public bool Add(Element element) => Native.add(Handle, GetHandle(element));
-        public bool Remove(Element element) => Native.remove(Handle, GetHandle(element));
-
-        // FIXME: Bulletproof
+        public bool Add(Element element) => Native.add(Handle, element.Handle);
+        public bool Remove(Element element) => Native.remove(Handle, element.Handle);
+        
         public IEnumerable<Element> IterateRecurse()
         {
-            IntPtr ptr = Native.iterate_recurse(Handle);
-            foreach (Value val in Marshal.PtrToStructure<Iterator>(ptr).GetValues())
-            {
-                Element el = val.Extract<Element>();
-                val.Dispose();
-                yield return el;
-            }
+            throw new NotImplementedException();
         }
     }
 }
