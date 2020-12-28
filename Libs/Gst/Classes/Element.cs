@@ -116,7 +116,7 @@ namespace Gst
         // FIXME: This function is the culprit for wavparse0 errors
         // TODO: Make this work properly, and additionally clean up
         // the API in the process.
-        public static bool Link(params Element[] elements)
+        public static bool LinkMany(params Element[] elements)
         {
             // TODO: Should this return false?
             if (elements.Length < 2)
