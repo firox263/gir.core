@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Gst
 {
@@ -15,13 +16,27 @@ namespace Gst
         
         public static uint CoreErrorQuark
             => Native.core_error_quark();
-        
-        public static void Init()
-        {
-            var argc = 0;
-            IntPtr argv = IntPtr.Zero;
 
-            Global.Native.init(ref argc, ref argv);
+        public static void Init()
+            => Init(Array.Empty<string>());
+        
+        public static void Init(string[] args)
+        {
+            var argc = args.Length;
+            IntPtr[] argv = new IntPtr[argc];
+
+            // Convert string array to IntPtr array
+            for (var i = 0; i < argc; i++)
+            {
+                argv[i] = Marshal.StringToHGlobalAnsi(args[i]);
+            }
+
+            IntPtr argvPtr = argv.Length > 0 ? argv[0] : IntPtr.Zero;
+            Global.Native.init(ref argc, ref argvPtr);
+            
+            // Free strings
+            foreach (IntPtr ptr in argv)
+                Marshal.FreeHGlobal(ptr);
         }
     }
 }
